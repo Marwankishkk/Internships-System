@@ -5,8 +5,10 @@ const registerController = async (req, res) => {
   try {
     const result = await userService.register(req.body);
 
-    return res.status(201).json(result);
-  } catch (error) {
+    return res.status(201).json({
+      message: "User created successfully",
+      data: result
+    });  } catch (error) {
     return res.status(400).json({
       message: error.message
     });
@@ -36,7 +38,9 @@ const loginController = async (req, res) => {
   
       return res.status(200).json({
         message: "Login successful",
-        user: result.user
+        data: {
+          user: result.user
+        }
       });
   
     } catch (error) {
@@ -53,7 +57,13 @@ const refreshAccessTokenController = (req, res) => {
 
     const result = userService.refreshAccessToken(token);
 
-    return res.status(200).json(result);
+    return res.status(200).json({
+      message: "Token refreshed successfully",
+      data: {
+        accessToken: result.accessToken
+      }
+    });
+
 
   } catch (error) {
     return res.status(401).json({

@@ -20,8 +20,16 @@ const {
 // REGISTER
 const register = async (data) => {
   const { email, password, role } = data;
-  if (!email || !password || !role) {
-    throw new Error("Email, password, and role are required");
+  if (!email) {
+    throw new Error("Email is required");
+  }
+
+  if (!password) {
+    throw new Error("Password is required");
+  }
+
+  if (!role) {
+    throw new Error("Role is required");
   }
 
   const existingUser = await getUserByEmail(email);
@@ -59,13 +67,11 @@ const register = async (data) => {
       });
     }
 
-    return {
-      message: "User created successfully"
-    };
+    return {role , email }
 
   } catch (err) {
     await deleteUserById(user._id);
-    throw new Error("Profile creation failed: " + err.message);
+    throw new Error("User creation failed: " + err.message);
   }
 };
 // LOGIN

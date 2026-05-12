@@ -1,12 +1,17 @@
 const mongoose = require('mongoose');
-
+const validator = require("validator");
 const UserSchema = mongoose.Schema({
-
-    email : {
+    email: {
         type: String,
         required: [true, 'Please provide email'],
         unique: true,
-    },
+        lowercase: true,
+        trim: true,
+        validate: {
+          validator: validator.isEmail,
+          message: 'Invalid email format'
+        }
+      },
     password: {
         type: String,
         required: [true, 'Please provide password'],

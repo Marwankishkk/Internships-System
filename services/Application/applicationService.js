@@ -52,10 +52,7 @@ const createApplicationService = async (data, user) => {
             wishOrder
         });
 
-        return {
-            message: "Application created successfully",
-            data: newApplication
-        };
+        return {newApplication};
 
     } catch (error) {
         console.error('Error creating application:', error);

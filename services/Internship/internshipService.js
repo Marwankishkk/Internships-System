@@ -4,6 +4,7 @@ const { getStudentByUserId,getCompanyByUserId } = require('../../repositories/Us
 const {findApplicationsForInternship} = require('../../repositories/Application/application');
 const {rankStudents} = require("../../utils/ranking.js");
 const application = require('../../models/Application/application');
+const internship = require('../../models/Internship/internship.js');
 
 const createInternship = async (data,user) => {
     try {
@@ -27,11 +28,11 @@ const createInternship = async (data,user) => {
             requiredGPA,
             city
         });
-
-        return {
-            message: "Internship created successfully",
-            data: newInternship
-        };
+        await newInternship.populate({
+            path: 'company',
+            select: 'companyName'
+        });
+        return {newInternship}
 
     } catch (error) {
         console.error('Error creating internship:', error);
@@ -53,7 +54,7 @@ const getIntershipsForStudent = async (userData) => {
     try {
 
     const internships = await getRecommendedInternships(student.major,student.gpa);
-    return internships;
+    return {internships};
     }
     catch (error) {
         console.error('Error fetching internships:', error);
@@ -68,7 +69,7 @@ const getInternshipApplications = async (data,user) =>{
     const {internshipId} = data
     applications = await findApplicationsForInternship(internshipId)
     const ranking = await rankStudents(applications)
-    return ranking
+    return {ranking};
     }
     catch(error) {
         console.error('Error fetching applications:', error);
